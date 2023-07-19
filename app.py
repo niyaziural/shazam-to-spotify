@@ -159,14 +159,17 @@ def add_songs_to_playlist(playlist_id):
 
 # Get tokens into the memory if they are already saved in a file
 def get_tokens_from_file(fileName):
-    with open(fileName, encoding="utf-8-sig") as tokens_file:
-        tokens_dict = csv.DictReader(tokens_file)
-        tokens_from_file = next(tokens_dict)
-        if tokens_from_file.get("access_token", "Not Found") == "Not Found":
-            return False
-        tokens["access_token"] = tokens_from_file["access_token"]
-        tokens["refresh_token"] = tokens_from_file["refresh_token"]
-    return True
+    try:
+        with open(fileName, encoding="utf-8-sig") as tokens_file:
+            tokens_dict = csv.DictReader(tokens_file)
+            tokens_from_file = next(tokens_dict)
+            if tokens_from_file.get("access_token", "Not Found") == "Not Found":
+                return False
+            tokens["access_token"] = tokens_from_file["access_token"]
+            tokens["refresh_token"] = tokens_from_file["refresh_token"]
+        return True
+    except StopIteration:
+        return False
 
 
 # Make a dummy call to the API to check tokens' validation (expired or not)
